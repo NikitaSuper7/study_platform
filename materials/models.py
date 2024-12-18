@@ -33,9 +33,14 @@ class Lesson(models.Model):
         help_text="Загрузите картинку",
     )
     video_link = models.TextField(
-        verbose_name="video_link", help_text="Добавьте ссылку на видео", null=True, blank=True
+        verbose_name="video_link",
+        help_text="Добавьте ссылку на видео",
+        null=True,
+        blank=True,
     )
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="lessons", null=True, blank=True)
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE, related_name="lessons", null=True, blank=True
+    )
 
     def __str__(self):
         return f"lesson - {self.title}"

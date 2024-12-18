@@ -1,0 +1,47 @@
+[
+  {
+    "model": "users.payments",
+    "pk": 1,
+    "fields": {
+      "username": 1,
+      "purchased_lessons": 2,
+      "amount":1000,
+      "payment_type": "Send_to_count",
+      "payment_date": "2022-05-01"
+    }
+  },
+
+  {
+    "model": "users.payments",
+    "pk": 2,
+    "fields": {
+      "username": 1,
+      "purchased_lessons": 2,
+      "amount":1000,
+       "payment_type": "Send_to_count",
+      "payment_date": "2023-05-01"
+    }
+  },
+  {
+    "model": "users.payments",
+    "pk": 3,
+    "fields": {
+      "username": 2,
+      "purchased_courses": 2,
+      "amount":100000,
+      "payment_type": "Cash",
+      "payment_date": "2024-05-01"
+    }
+  },
+  {
+    "model": "users.payments",
+    "pk": 4,
+    "fields": {
+      "username": 1,
+      "purchased_lessons": 3,
+      "amount":1500,
+      "payment_type": "Cash",
+      "payment_date": "2019-05-01"
+    }
+  }
+]

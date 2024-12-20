@@ -1,0 +1,78 @@
+[
+{
+    "model": "users.user",
+    "pk": 1,
+    "fields": {
+        "password": "1234",
+        "last_login": null,
+        "is_superuser": false,
+        "first_name": "",
+        "last_name": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2024-12-18T03:18:35.744Z",
+        "email": "test@mail.ru",
+        "phone_number": "1234",
+        "avatar": "",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.user",
+    "pk": 2,
+    "fields": {
+        "password": "1234",
+        "last_login": null,
+        "is_superuser": false,
+        "first_name": "",
+        "last_name": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2024-12-18T03:33:26.383Z",
+        "email": "test_2@mail.ru",
+        "phone_number": "1234",
+        "avatar": "",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.user",
+    "pk": 3,
+    "fields": {
+        "password": "1234",
+        "last_login": null,
+        "is_superuser": false,
+        "first_name": "",
+        "last_name": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2024-12-18T03:37:44.947Z",
+        "email": "test_3@mail.ru",
+        "phone_number": "1234",
+        "avatar": "",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.user",
+    "pk": 4,
+    "fields": {
+        "password": "1234",
+        "last_login": null,
+        "is_superuser": false,
+        "first_name": "",
+        "last_name": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2024-12-18T03:39:32.397Z",
+        "email": "test_4@mail.ru",
+        "phone_number": "1234",
+        "avatar": "",
+        "groups": [],
+        "user_permissions": []
+    }
+}
+]

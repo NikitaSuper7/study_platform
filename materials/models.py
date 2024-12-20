@@ -1,4 +1,5 @@
 from django.db import models
+from config import settings
 
 
 # Create your models here.
@@ -10,6 +11,16 @@ class Course(models.Model):
         verbose_name="description", help_text="Введите описание", blank=True, null=True
     )
     preview = models.ImageField(upload_to="materials/courses", blank=True, null=True)
+
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        verbose_name="Владелец",
+        help_text="Укажите владельца",
+        related_name="course_owner",
+    )
 
     def __str__(self):
         return f"course - {self.title}"
@@ -40,6 +51,15 @@ class Lesson(models.Model):
     )
     course = models.ForeignKey(
         Course, on_delete=models.CASCADE, related_name="lessons", null=True, blank=True
+    )
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        verbose_name="Владелец",
+        help_text="Укажите владельца",
+        related_name="lesson_owner",
     )
 
     def __str__(self):

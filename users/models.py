@@ -51,7 +51,9 @@ class Payments(models.Model):
         blank=True,
         null=True,
     )
-    payment_date = models.DateField(auto_now_add=True, verbose_name="Дата оплаты", null=True, blank=True)
+    payment_date = models.DateField(
+        auto_now_add=True, verbose_name="Дата оплаты", null=True, blank=True
+    )
     purchased_lessons = models.ForeignKey(
         Lesson, blank=True, null=True, on_delete=models.CASCADE, related_name="lessons"
     )

@@ -18,11 +18,22 @@ class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
 
+    def perform_create(self, serializer):
+        course = serializer.save()
+        course.owner = self.request.user
+        course.save()
+
 
 # Для уроков через generics:
 class LessonCreateApiView(CreateAPIView):
+    """Создает уроки"""
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+
+    def perfom_create(self, serializer):
+        lesson = serializer.save()
+        lesson.owner = self.request.user
+        lesson.save()
 
 
 class LessonListaApiView(ListAPIView):

@@ -14,6 +14,7 @@ from rest_framework.generics import (
 )
 
 from users.permissions import IsModeratorsPermission, IsOwnerPermission
+from materials.paginators import MaterialsPaginator
 
 
 
@@ -26,6 +27,7 @@ from users.permissions import IsModeratorsPermission, IsOwnerPermission
 class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+    pagination_class = MaterialsPaginator
 
     # Владельцем автоматический становится пользователь, который создает объект:
     def perform_create(self, serializer):
@@ -58,6 +60,7 @@ class LessonCreateApiView(CreateAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
 
+
     def perfom_create(self, serializer):
         lesson = serializer.save()
         lesson.owner = self.request.user
@@ -72,6 +75,7 @@ class LessonListaApiView(ListAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = (IsModeratorsPermission | IsOwnerPermission, IsAuthenticated)
+    pagination_class = MaterialsPaginator
 
     def get_queryset(self):
         queryset = super().get_queryset()

@@ -43,8 +43,9 @@ class CourseSerializer(ModelSerializer):
         return 0
 
     def get_subscription(self, instance):
-        # user = self.request.user
-        obj = instance.subscription_course.filter(owner=settings.AUTH_USER_MODEL)
+        request = self.context.get('request')
+        user = request.user
+        obj = instance.subscription_course.filter(owner=user)
         if obj:
             return True
         else:

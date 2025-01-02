@@ -6,6 +6,7 @@ from materials.views import (
     LessonDestroyApiView,
     LessonUpdateApiView,
     LessonRetrieveApiView,
+    SubscriptionApiView
 )
 from materials.apps import MaterialsConfig
 from django.urls import path
@@ -28,6 +29,7 @@ urlpatterns = [
         "lessons/<int:pk>/update/", LessonUpdateApiView.as_view(), name="lesson_update"
     ),
     path("lessons/<int:pk>/", LessonRetrieveApiView.as_view(), name="lesson_retrieve"),
+    path("subscription/", SubscriptionApiView.as_view(), name="subscription"),
 ]
 
 urlpatterns += router.urls

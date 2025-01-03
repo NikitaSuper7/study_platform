@@ -4,18 +4,22 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from materials.models import Course, Lesson, Subscription
-from materials.serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer
+from materials.serializers import (
+    CourseSerializer,
+    LessonSerializer,
+    SubscriptionSerializer,
+)
 from rest_framework.generics import (
     CreateAPIView,
     ListAPIView,
     RetrieveAPIView,
     UpdateAPIView,
-    DestroyAPIView, get_object_or_404,
+    DestroyAPIView,
+    get_object_or_404,
 )
 
 from users.permissions import IsModeratorsPermission, IsOwnerPermission
 from materials.paginators import MaterialsPaginator
-
 
 
 # Create your views here.
@@ -59,7 +63,6 @@ class LessonCreateApiView(CreateAPIView):
 
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-
 
     def perfom_create(self, serializer):
         lesson = serializer.save()
@@ -115,6 +118,7 @@ class LessonDestroyApiView(DestroyAPIView):
         self.permission_classes = (IsOwnerPermission, IsAuthenticated)
         return super().get_permissions()
 
+
 class SubscriptionApiView(APIView):
     serializer_class = SubscriptionSerializer
     # queryset = Subscription.objects.all()
@@ -122,7 +126,7 @@ class SubscriptionApiView(APIView):
     def post(self, request, *args, **kwargs):
         # self.permission_classes = (AllowAny)
         user = self.request.user
-        course_id = self.request.data.get('course')
+        course_id = self.request.data.get("course")
         # course = get_object_or_404(Course, pk=course_id)
 
         subs_item = Subscription.objects.filter(owner=user, course_id=course_id)
@@ -135,4 +139,3 @@ class SubscriptionApiView(APIView):
             Subscription.objects.create(owner=user, course_id=course_id)
             message = "Подписка создана"
         return Response({"message": message})
-

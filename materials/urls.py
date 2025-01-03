@@ -6,7 +6,7 @@ from materials.views import (
     LessonDestroyApiView,
     LessonUpdateApiView,
     LessonRetrieveApiView,
-    SubscriptionApiView
+    SubscriptionApiView,
 )
 from materials.apps import MaterialsConfig
 from django.urls import path

@@ -6,9 +6,7 @@ from materials.validators import VideosValidator, HasLinkValidator
 
 
 class LessonSerializer(ModelSerializer):
-    validators = [
-        VideosValidator(field="video_link")
-    ]
+    validators = [VideosValidator(field="video_link")]
 
     class Meta:
         model = Lesson
@@ -43,7 +41,7 @@ class CourseSerializer(ModelSerializer):
         return 0
 
     def get_subscription(self, instance):
-        request = self.context.get('request')
+        request = self.context.get("request")
         user = request.user
         obj = instance.subscription_course.filter(owner=user)
         if obj:
@@ -56,4 +54,3 @@ class SubscriptionSerializer(ModelSerializer):
     class Meta:
         model = Subscription
         fields = "__all__"
-

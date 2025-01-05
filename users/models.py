@@ -60,9 +60,31 @@ class Payments(models.Model):
     purchased_courses = models.ForeignKey(
         Course, blank=True, null=True, on_delete=models.CASCADE, related_name="courses"
     )
-    amount = models.DecimalField(
-        max_digits=100, decimal_places=2, verbose_name="Сумма оплаты"
-    )
+    amount = models.FloatField(verbose_name="Сумма оплаты", null=True, blank=True)
     payment_type = models.CharField(
         max_length=20, choices=STATE_CHOICES, verbose_name="Тип оплаты"
     )
+
+    session_id = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="ID сессии",
+        help_text="ID сессии оплаты.",
+    )
+    link = models.URLField(
+        verbose_name="Ссылка для оплаты",
+        help_text="Ссылка для оплаты.",
+        max_length=400,
+        blank=True,
+        null=True,
+    )
+
+    class Meta:
+        verbose_name = "Оплата"
+        verbose_name_plural = "Оплаты"
+
+    def __str__(self):
+        return f"Оплата на {self.amount} руб."
+
+

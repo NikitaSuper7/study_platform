@@ -21,6 +21,7 @@ class Course(models.Model):
         help_text="Укажите владельца",
         related_name="course_owner",
     )
+    price = models.PositiveIntegerField(verbose_name="price", default=10000)
 
     def __str__(self):
         return f"course - {self.title}"

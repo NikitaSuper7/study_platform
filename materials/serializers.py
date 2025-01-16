@@ -3,6 +3,7 @@ from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from config import settings
 from materials.models import Course, Lesson, Subscription
 from materials.validators import VideosValidator, HasLinkValidator
+from users.services import convert_price
 
 
 class LessonSerializer(ModelSerializer):
@@ -17,6 +18,7 @@ class CourseSerializer(ModelSerializer):
     count_lessons = SerializerMethodField()
     lessons = LessonSerializer(many=True, read_only=True)
     subscription = SerializerMethodField()
+    # usd_price = SerializerMethodField()
     validators = [
         HasLinkValidator(field="description"),
         HasLinkValidator(field="title"),
@@ -24,7 +26,7 @@ class CourseSerializer(ModelSerializer):
 
     class Meta:
         model = Course
-        fields = (
+        fields = ("id",
             "title",
             "description",
             "preview",
@@ -32,6 +34,7 @@ class CourseSerializer(ModelSerializer):
             "lessons",
             "owner",
             "subscription",
+            "price",
         )
 
     def get_count_lessons(self, instance):
@@ -48,6 +51,9 @@ class CourseSerializer(ModelSerializer):
             return True
         else:
             False
+
+    # def get_usd_price(self, instance): # instance здесь это объект модели
+    #     return convert_price(instance.amount)
 
 
 class SubscriptionSerializer(ModelSerializer):

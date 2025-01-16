@@ -16,5 +16,6 @@ def send_update_lesson_email(message, subject, recipient_email):
 def check_last_login():
     today = timezone.now().today().date()
     users = User.objects.filter(last_login__isnull=False, last_login__date_lt=today - timezone.timedelta(days=30))
-    for user in users:
-        user.is_active = False
+    if users:
+        for user in users:
+            user.is_active = False

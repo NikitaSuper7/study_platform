@@ -79,6 +79,7 @@ class Payments(models.Model):
         blank=True,
         null=True,
     )
+    status = models.CharField(max_length=100, blank=True, null=True, verbose_name="States")
 
     class Meta:
         verbose_name = "Оплата"

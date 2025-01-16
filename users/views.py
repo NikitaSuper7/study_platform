@@ -19,7 +19,7 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 # Для создания пользователя
 from rest_framework.generics import CreateAPIView
 
-from users.services import convert_price, create_stripe_price, create_stripe_session
+from users.services import convert_price, create_stripe_price, create_stripe_session, return_stripe_session
 
 
 # Create your views here.
@@ -67,4 +67,6 @@ class PaymentsCreateApiView(CreateAPIView):
         payment.link = payment_link
         payment.session_id = session_id
         payment.amount = payment.purchased_courses.price
+        session_state = return_stripe_session(session_id)
+        payment.status = session_state.get("payment_status")
         payment.save()

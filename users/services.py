@@ -23,7 +23,7 @@ def convert_price(amount):
 def create_stripe_price(amount):
     return stripe.Price.create(
         currency="usd",
-        unit_amount= int(amount * 100),
+        unit_amount=int(amount * 100),
         # recurring={"interval": "month"}, # Переодическая оплата (подписка)
         product_data={"name": "Payment"},
     )
@@ -37,3 +37,9 @@ def create_stripe_session(price):
         mode="payment",
     )
     return session.get("id"), session.get("url")
+
+
+def return_stripe_session(session_id):
+    """Возвращает сессию по ID"""
+    session = stripe.checkout.Session.retrieve(session_id)
+    return session

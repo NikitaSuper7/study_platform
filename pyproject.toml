@@ -19,6 +19,11 @@ ipython = "^8.31.0"
 drf-yasg = "^1.21.8"
 stripe = "^11.4.1"
 requests = "^2.32.3"
+celery = "^5.4.0"
+redis = "^5.2.1"
+worker = "^2018.4.1"
+eventlet = "^0.38.2"
+django-celery-beat = "^2.7.0"
 
 
 [build-system]

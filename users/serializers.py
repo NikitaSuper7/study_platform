@@ -5,7 +5,8 @@ from users.models import User, Payments
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ("email", "username", "is_staff", "is_active", "is_superuser")
+        fields = ("email", "username", "is_staff", "is_active", "is_superuser", "password")
+
 
 
 class PaymentsSerializer(ModelSerializer):

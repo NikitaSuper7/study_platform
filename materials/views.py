@@ -18,6 +18,7 @@ from rest_framework.generics import (
     get_object_or_404,
 )
 
+from materials.tasks import send_update_lesson_email
 from users.permissions import IsModeratorsPermission, IsOwnerPermission
 from materials.paginators import MaterialsPaginator
 
@@ -55,6 +56,18 @@ class CourseViewSet(ModelViewSet):
         queryset = queryset.filter(owner=self.request.user)
         # queryset.
         return queryset
+
+    # @action(detail=True, method=("post",))
+    def perform_update(self, serializer):
+        course = serializer.save()
+        # old_material = course.material
+        cours_id = course.pk
+        subs_item = Subscription.objects.filter(course_id=cours_id)
+        sub_users_mails = [sub.owner.email for sub in subs_item]
+        message = f"Вы подписаны на курс - {course.title}, он обновился. Ознакомьтесь с новыми материалами"
+        subject = "Обновление курса на учебной платформе."
+        send_update_lesson_email.delay(message=message, subject=subject, recipient_email=sub_users_mails)
+        course.save()
 
 
 # Для уроков через generics:

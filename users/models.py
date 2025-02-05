@@ -25,6 +25,14 @@ class User(AbstractUser):
         help_text="Загрузите автар.",
     )
 
+    tg_chat_id = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        verbose_name='telegram chat id',
+        help_text="Укажите телеграмм",
+    )
+
     def __str__(self):
         return f"{self.email}"
 
@@ -79,6 +87,7 @@ class Payments(models.Model):
         blank=True,
         null=True,
     )
+    status = models.CharField(max_length=100, blank=True, null=True, verbose_name="States")
 
     class Meta:
         verbose_name = "Оплата"

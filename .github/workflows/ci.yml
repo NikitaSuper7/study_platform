@@ -27,6 +27,12 @@ jobs:
     needs: lint
     runs-on: ubuntu-latest
 
+    services:
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -45,6 +51,7 @@ jobs:
         env:
           EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
           NAME: ${{ secrets.POSTGRES_DB }}
+          CELERY_BROKER_URL: ${{ secrets.CELERY_BROKER_URL }}
         run: python manage.py test
 
   build:

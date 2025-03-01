@@ -93,10 +93,7 @@ jobs:
             export EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}
             export EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}
             export DEFAULT_FROM_EMAIL=${{ secrets.DEFAULT_FROM_EMAIL }}
-      
-            echo "DEBUG: Проверяем переменные окружения перед запуском контейнера"
-            printenv | grep EMAIL
-      
+
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
             docker stop myapp || true
             docker rm myapp || true
@@ -110,9 +107,5 @@ jobs:
               -e EMAIL_HOST_PASSWORD=\$EMAIL_HOST_PASSWORD \
               -e DEFAULT_FROM_EMAIL=\$DEFAULT_FROM_EMAIL \
               ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-      
-            echo "DEBUG: Проверяем, какие переменные переданы в контейнер"
-            docker exec myapp printenv | grep EMAIL
           EOF
-
       

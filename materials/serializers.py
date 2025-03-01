@@ -1,9 +1,8 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
-from config import settings
 from materials.models import Course, Lesson, Subscription
 from materials.validators import VideosValidator, HasLinkValidator
-from users.services import convert_price
+
 
 
 class LessonSerializer(ModelSerializer):

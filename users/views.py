@@ -1,14 +1,9 @@
-from django.shortcuts import render
-from rest_framework import filters
+
 from rest_framework.generics import (
-    CreateAPIView,
     ListAPIView,
-    RetrieveAPIView,
-    UpdateAPIView,
-    DestroyAPIView,
 )
 from rest_framework.permissions import AllowAny
-from rest_framework.viewsets import ModelViewSet
+
 
 from users.serializers import (
     UserSerializer,

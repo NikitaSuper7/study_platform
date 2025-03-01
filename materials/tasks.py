@@ -10,7 +10,12 @@ from materials.services import send_telegram_message
 
 @shared_task
 def send_update_lesson_email(message, subject, recipient_email):
-    send_mail(subject=subject, message=message, from_email=EMAIL_HOST_USER, recipient_list=recipient_email)
+    send_mail(
+        subject=subject,
+        message=message,
+        from_email=EMAIL_HOST_USER,
+        recipient_list=recipient_email,
+    )
     users = User.objects.get(email__in=recipient_email)
     if users:
         for user in users:
@@ -21,7 +26,9 @@ def send_update_lesson_email(message, subject, recipient_email):
 @shared_task
 def check_last_login():
     today = timezone.now().today().date()
-    users = User.objects.filter(last_login__isnull=False, last_login__lt=today - timezone.timedelta(days=30))
+    users = User.objects.filter(
+        last_login__isnull=False, last_login__lt=today - timezone.timedelta(days=30)
+    )
     if users:
         for user in users:
             user.is_active = False

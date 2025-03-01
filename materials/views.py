@@ -66,7 +66,9 @@ class CourseViewSet(ModelViewSet):
         sub_users_mails = [sub.owner.email for sub in subs_item]
         message = f"Вы подписаны на курс - {course.title}, он обновился. Ознакомьтесь с новыми материалами"
         subject = "Обновление курса на учебной платформе."
-        send_update_lesson_email.delay(message=message, subject=subject, recipient_email=sub_users_mails)
+        send_update_lesson_email.delay(
+            message=message, subject=subject, recipient_email=sub_users_mails
+        )
         course.save()
 
 

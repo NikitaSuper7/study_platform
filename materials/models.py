@@ -5,6 +5,7 @@ from config import settings
 # Create your models here.
 class Course(models.Model):
     """Модель курсов."""
+
     title = models.CharField(
         max_length=150, verbose_name="title", help_text="Введите название курса"
     )
@@ -34,6 +35,7 @@ class Course(models.Model):
 
 class Lesson(models.Model):
     """Модель уроков"""
+
     title = models.CharField(
         max_length=150, verbose_name="title", help_text="Введите название урока"
     )

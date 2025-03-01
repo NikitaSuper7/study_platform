@@ -29,7 +29,7 @@ class User(AbstractUser):
         max_length=50,
         blank=True,
         null=True,
-        verbose_name='telegram chat id',
+        verbose_name="telegram chat id",
         help_text="Укажите телеграмм",
     )
 
@@ -87,7 +87,9 @@ class Payments(models.Model):
         blank=True,
         null=True,
     )
-    status = models.CharField(max_length=100, blank=True, null=True, verbose_name="States")
+    status = models.CharField(
+        max_length=100, blank=True, null=True, verbose_name="States"
+    )
 
     class Meta:
         verbose_name = "Оплата"
@@ -95,5 +97,3 @@ class Payments(models.Model):
 
     def __str__(self):
         return f"Оплата на {self.amount} руб."
-
-

@@ -51,7 +51,8 @@ jobs:
         env:
           EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
           NAME: ${{ secrets.POSTGRES_DB }}
-          CELERY_BROKER_URL: ${{ secrets.CELERY_BROKER_URL }}
+          CELERY_BROKER_URL: redis://localhost:6379/0
+          CELERY_RESULT_BACKEND: redis://localhost:6379/0
         run: python manage.py test
 
   build:

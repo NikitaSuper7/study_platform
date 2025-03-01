@@ -13,8 +13,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-ENV CELERY_BROKER_URL="redis://redis:6379/0"
-ENV CELERY_BACKEND="redis://redis:6379/0"
+RUN mkdir -p /app/staticfiles && chmod -R 755 /app/staticfiles
 
-# Создаем директорию для медиафайлов
-RUN mkdir -p /app/media
+EXPOSE 8000
+
+CMD ["sh", "-c", "python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000"]

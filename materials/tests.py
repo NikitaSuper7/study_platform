@@ -106,6 +106,7 @@ class CourseTestCase(APITestCase):
             "previous": None,
             "results": [
                 {
+                    "id": 1,
                     "title": self.course.title,
                     "description": self.course.description,
                     "preview": None,

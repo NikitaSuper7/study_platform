@@ -93,18 +93,21 @@ jobs:
           EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
           DEFAULT_FROM_EMAIL: ${{ secrets.DEFAULT_FROM_EMAIL }}
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-            docker stop myapp || true
-            docker rm myapp || true
-            docker run -d --name myapp -p 80:8000 \
-              -e EMAIL_BACKEND=$EMAIL_BACKEND \
-              -e EMAIL_HOST=$EMAIL_HOST \
-              -e EMAIL_PORT=$EMAIL_PORT \
-              -e EMAIL_USE_TLS=$EMAIL_USE_TLS \
-              -e EMAIL_USE_SSL=$EMAIL_USE_SSL \
-              -e EMAIL_HOST_USER=$EMAIL_HOST_USER \
-              -e EMAIL_HOST_PASSWORD=$EMAIL_HOST_PASSWORD \
-              -e DEFAULT_FROM_EMAIL=$DEFAULT_FROM_EMAIL \
-              ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+          echo "$SSH_KEY" > /tmp/ssh_key
+          chmod 600 /tmp/ssh_key
+          ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+          docker stop myapp || true
+          docker rm myapp || true
+          docker run -d --name myapp -p 80:8000 \
+          -e EMAIL_BACKEND=$EMAIL_BACKEND \
+          -e EMAIL_HOST=$EMAIL_HOST \
+          -e EMAIL_PORT=$EMAIL_PORT \
+          -e EMAIL_USE_TLS=$EMAIL_USE_TLS \
+          -e EMAIL_USE_SSL=$EMAIL_USE_SSL \
+          -e EMAIL_HOST_USER=$EMAIL_HOST_USER \
+          -e EMAIL_HOST_PASSWORD=$EMAIL_HOST_PASSWORD \
+          -e DEFAULT_FROM_EMAIL=$DEFAULT_FROM_EMAIL \
+          ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
           EOF
+          rm /tmp/ssh_key

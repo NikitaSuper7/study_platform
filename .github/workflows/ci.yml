@@ -99,6 +99,7 @@ jobs:
             docker stop myapp || true
             docker rm myapp || true
             docker run -d --name myapp -p 80:8000 \
+              -e SECRET_KEY=\$SECRET_KEY \
               -e EMAIL_BACKEND=\$EMAIL_BACKEND \
               -e EMAIL_HOST=\$EMAIL_HOST \
               -e EMAIL_PORT=\$EMAIL_PORT \

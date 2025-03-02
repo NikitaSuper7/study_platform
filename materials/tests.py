@@ -124,7 +124,7 @@ class CourseTestCase(APITestCase):
                     ],
                     "owner": self.user.pk,
                     "subscription": None,
-                    "price": 10000
+                    "price": 10000,
                 }
             ],
         }

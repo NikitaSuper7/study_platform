@@ -30,6 +30,7 @@ coreapi = "^2.3.3"
 pyyaml = "^6.0.2"
 coverage = "^7.6.10"
 flake8 = "^7.1.2"
+gunicorn = "^23.0.0"
 
 
 [build-system]

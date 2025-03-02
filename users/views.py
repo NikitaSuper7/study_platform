@@ -1,16 +1,14 @@
-from django.shortcuts import render
-from rest_framework import filters
 from rest_framework.generics import (
-    CreateAPIView,
     ListAPIView,
-    RetrieveAPIView,
-    UpdateAPIView,
-    DestroyAPIView,
 )
 from rest_framework.permissions import AllowAny
-from rest_framework.viewsets import ModelViewSet
 
-from users.serializers import UserSerializer, PaymentsSerializer, PaymentsCreateSerializer
+
+from users.serializers import (
+    UserSerializer,
+    PaymentsSerializer,
+    PaymentsCreateSerializer,
+)
 
 from users.models import User, Payments
 from django_filters import rest_framework as filters
@@ -19,7 +17,12 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 # Для создания пользователя
 from rest_framework.generics import CreateAPIView
 
-from users.services import convert_price, create_stripe_price, create_stripe_session, return_stripe_session
+from users.services import (
+    convert_price,
+    create_stripe_price,
+    create_stripe_session,
+    return_stripe_session,
+)
 
 
 # Create your views here.
@@ -35,7 +38,6 @@ class UserCreateApiView(CreateAPIView):
     # Для того, чтобы пользователь создавался корректно:
     def perform_create(self, serializer):
         user = serializer.save(is_active=True)
-        user.is_active = True
         user.set_password(user.password)
         user.save()
 
@@ -55,6 +57,7 @@ class PaymentsListApiView(ListAPIView):
     )  # Бэкенд для обработки фильтра
     filterset_fields = ("purchased_courses", "purchased_lessons", "payment_type")
     ordering_fields = ("payment_date",)
+
 
 class PaymentsCreateApiView(CreateAPIView):
     serializer_class = PaymentsCreateSerializer

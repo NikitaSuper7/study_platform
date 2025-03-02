@@ -1,5 +1,5 @@
 from django.contrib import admin
-from materials.models import Course, Lesson, Subscription
+from materials.models import Course
 
 # Register your models here.
 

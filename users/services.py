@@ -12,10 +12,12 @@ def convert_price(amount):
 
     usd_price = 0
     # Забираем курс с currencyapi:
-    response = requests.get(url=f"{CURR_API_URL}v3/latest?apikey={CURR_API_KEY}&currencies=RUB")
+    response = requests.get(
+        url=f"{CURR_API_URL}v3/latest?apikey={CURR_API_KEY}&currencies=RUB"
+    )
     print(response.json())
     if response.status_code == status.HTTP_200_OK:
-        usd_rate = response.json()['data']['RUB'].get("value")
+        usd_rate = response.json()["data"]["RUB"].get("value")
         usd_price = amount / usd_rate
     return int(usd_price)
 

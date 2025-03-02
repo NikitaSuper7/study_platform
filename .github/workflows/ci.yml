@@ -1,0 +1,122 @@
+name: Django CI
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8
+
+      - name: Run Flake8
+        run: flake8 .
+
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+
+    services:
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests
+        env:
+          EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
+          NAME: ${{ secrets.POSTGRES_DB }}
+          CELERY_BROKER_URL: redis://localhost:6379/0
+          CELERY_RESULT_BACKEND: redis://localhost:6379/0
+        run: python manage.py test
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }} .
+
+      - name: Push Docker image to Docker Hub
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Deploy to Server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << EOF
+            export EMAIL_BACKEND=${{ secrets.EMAIL_BACKEND }}
+            export EMAIL_HOST=${{ secrets.EMAIL_HOST }}
+            export EMAIL_PORT=${{ secrets.EMAIL_PORT }}
+            export EMAIL_USE_TLS=${{ secrets.EMAIL_USE_TLS }}
+            export EMAIL_USE_SSL=${{ secrets.EMAIL_USE_SSL }}
+            export EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}
+            export EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}
+            export DEFAULT_FROM_EMAIL=${{ secrets.DEFAULT_FROM_EMAIL }}
+            export SECRET_KEY="${{ secrets.SECRET_KEY }}"
+          
+            export POSTGRES_DB="${{ secrets.POSTGRES_DB }}"
+            export POSTGRES_USER="${{ secrets.POSTGRES_USER }}"
+            export POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}"
+            export POSTGRES_PORT="${{ secrets.POSTGRES_PORT }}"
+
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+            docker stop myapp || true
+            docker rm myapp || true
+            docker run -d --name myapp -p 80:8000 \
+              -e SECRET_KEY=\$SECRET_KEY \
+              -e EMAIL_BACKEND=\$EMAIL_BACKEND \
+              -e EMAIL_HOST=\$EMAIL_HOST \
+              -e EMAIL_PORT=\$EMAIL_PORT \
+              -e EMAIL_USE_TLS=\$EMAIL_USE_TLS \
+              -e EMAIL_USE_SSL=\$EMAIL_USE_SSL \
+              -e EMAIL_HOST_USER=\$EMAIL_HOST_USER \
+              -e EMAIL_HOST_PASSWORD=\$EMAIL_HOST_PASSWORD \
+              -e DEFAULT_FROM_EMAIL=\$DEFAULT_FROM_EMAIL \
+              -e POSTGRES_DB=\$POSTGRES_DB \
+              -e POSTGRES_USER=\$POSTGRES_USER \
+              -e POSTGRES_PASSWORD=\$POSTGRES_PASSWORD \
+              -e POSTGRES_PORT=\$POSTGRES_PORT \
+              ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+          EOF
+      

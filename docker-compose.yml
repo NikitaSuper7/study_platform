@@ -1,0 +1,82 @@
+#version: "3.12"
+
+services:
+  web:
+    build: .
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8001"
+    environment:
+      - DEBUG=True
+      - DATABASE_HOST=db  # Использование имени сервиса db как хоста базы данных
+      - DJANGO_SETTINGS_MODULE=config.settings
+
+    env_file:
+      - .env
+    volumes:
+      - .:/code
+      - static_volume:/code/static
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - static_volume:/app/staticfiles
+    depends_on:
+      - web
+
+
+  db:
+    image: postgres:17.0
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    expose:
+      - "5432"
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:latest
+    expose:
+      - "6379"
+
+  celery:
+    build: .
+    command: bash -c "celery -A config worker -l info -P eventlet"
+    volumes:
+      - .:/code
+    depends_on:
+      - redis
+      - db
+  celery-beat:
+    build: .
+    command: bash -c "celery -A config beat -l info -S django"
+    volumes:
+      - .:/code
+    depends_on:
+      - redis
+      - db
+
+
+
+networks:
+  default:
+
+volumes:
+  postgres_data:
+  static_volume:
